@@ -3,22 +3,30 @@ from mysql import connector
 from mysql.connector import errorcode
 
 class SourceMysql(SourceBase):
-    def get_data(self, sql_query, **kwargs):
+    def __init__(self, **kwargs) -> None:
+        super(SourceBase, self).__init__()
+
+        self.client = self.connect_to_bd(**kwargs)
+        
+
+    def get_data(self, sql_query):
         """
         Fonction renvoyant les donnees sous la forme d'un dictionnaire
         {
             'nom_colonne': [valeur1, valeur2,]
         }
         """
-        connection = self.connect_to_bd(**kwargs)
-        cursor = connection.cursor(dictionary=True)
+        if self.client.is_closed:
+            self.client.connect()
+
+        cursor = self.client.connect()
 
         cursor.execute(sql_query)
 
         dict_to_return = self.convert_cursor_to_dict(cursor)
 
         cursor.close()
-        connection.close()
+        self.client.close()
 
         return dict_to_return
 
