@@ -66,10 +66,3 @@ class Interquantile(object):
         dataSansAbhe = self.data[self.data<=borne_superieure]
         dataSansAbhe = dataSansAbhe[dataSansAbhe>=borne_inferieure]
         return dataSansAbhe
-        
-        
-    
-    
-
-   
-
